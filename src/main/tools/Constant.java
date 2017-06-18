@@ -12,4 +12,5 @@ public class Constant {
     public final static byte LEVEL_MESSAGE_INT=2;
     public final static byte LEVEL_MESSAGE_LIST=3;
     public final static byte LEVEL_COMPARE_RESULT=4;
+    public final static byte Broadcast_IM_LEADER=66;
 }

@@ -1,5 +1,6 @@
 package main.auth;
 
+import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
 import javafx.collections.ObservableList;
 import javafx.util.Callback;
 import main.Main;
@@ -8,6 +9,7 @@ import main.model.Trooper;
 import main.tools.Constant;
 import main.tools.DataTransfer;
 import millionaire.LevelCompare;
+import network.ISPServer;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -15,6 +17,7 @@ import java.net.Inet4Address;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by wesley shi on 2017/6/17.
@@ -24,6 +27,9 @@ public class AuthModel {
 	private static String commanderIP;
 
 	protected ObservableList<Trooper> troopers;
+
+	protected int acceptCount;
+	protected boolean need_compare = true;
 
 	protected List<Callback<DatagramPacket, String>> callbacks = new ArrayList<>();
 
@@ -53,7 +59,11 @@ public class AuthModel {
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
+					break;
 				case Constant.LEVEL_MESSAGE_LIST:
+					if (!need_compare){
+						return "i am not leader";
+					}
 					int [] list=new int[101];
 					for(int i=0;i<101;i++){
 						int z=DataTransfer.bytesToInt(data, 1+4*i);
@@ -63,12 +73,25 @@ public class AuthModel {
 					byte[] src1=DataTransfer.intToBytes(compareResult);
 					try {
 						MainModel.getIspServer().send((Inet4Address) param.getAddress(), src1,
-								Constant.LEVEL_MESSAGE_LIST);
+								Constant.LEVEL_COMPARE_RESULT);
+
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
+					if (compareResult == 1){
+						acceptCount++;
+						if (acceptCount == troopers.size()-1){
+							broadcastLeader();
+						}
+					} else {
+						need_compare = false;
+					}
+					break;
 				case Constant.LEVEL_COMPARE_RESULT:
 					int result=DataTransfer.bytesToInt(data, 1);
+					break;
+				case Constant.Broadcast_START_COMMANDER:
+					startCompare();
 				}
 				return "ok";
 			}
@@ -96,6 +119,41 @@ public class AuthModel {
             }
         }
     }
+
+	/**
+	 * broadcast to all people that i am leader
+	 */
+	private void broadcastLeader(){
+    	commander =  true;
+    	commanderIP = MainModel.getPeerDetector().GetLocalAddress().getHostAddress();
+    	try{
+    		byte[] content = new byte[4];
+    		content = DataTransfer.intToBytes(MainModel.user.getId(), content, 0);
+    		MainModel.getIspServer().sendBroadcast(content, Constant.Broadcast_IM_LEADER);
+		} catch (Exception e){
+    		e.printStackTrace();
+		}
+	}
+
+	private static int maxbound = 999999999;
+	private static int minbound = 10000000;
+	private void startCompare(){
+		Inet4Address[] addresses = MainModel.getPeerDetector().GetPeerAddresses();//获取所有人的IP
+		for (int i = 0; i < addresses.length; i++) {
+			Random rd = new Random();
+			int bound = rd.nextInt(maxbound) % (maxbound - minbound + 1) + minbound;// 生成一个较大的整数
+			int stepA = rd.nextInt(100);
+			int value = LevelCompare.callStep1(bound, stepA);
+			byte[] src = DataTransfer.intToBytes(value);
+			DataTransfer.intToBytes(bound, src, 4);
+			try {
+				MainModel.getIspServer().send(addresses[i], src, Constant.LEVEL_MESSAGE_INT);
+			} catch (Exception e){
+				e.printStackTrace();
+			}
+		}
+	}
+
 	
 	public static boolean isCommander() {
 		return commander;
