@@ -4,8 +4,8 @@ import java.util.Random;
 
 public class Prime {
 
-	private static final int ORDER = 10000;// 随机数的数量级
-	private static final int MIN = 1000;// 选择的随机数的最小值
+	private static final int ORDER = 500;// 随机数的数量级
+	private static final int MIN = 100;// 选择的随机数的最小值
 
 
 	public static void main(String[] args) {
@@ -44,7 +44,7 @@ public class Prime {
 	 * 
 	 * @return
 	 */
-	static int getPrime() {
+	public static int getPrime() {
 		int x = 0;
 		while (x % 2 == 0 || !isPrime(x)) {
 			x = getRandom();

@@ -1,8 +1,12 @@
 package millionaire;
 
-import rsa.RSA;
+import rsa.RsaTools;
 
 import java.math.BigInteger;
+
+import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
+
+import main.tools.DataTransfer;
 
 /**
  * Created by rui on 2017/6/17.
@@ -17,17 +21,30 @@ public class Millionnaire {
 	 * @param randomnum
 	 *            A生成的大随机数 用加密后的大随机数减去A的军衔
 	 * @return 返回结果
+	 * @throws Exception 
 	 */
-	public static int step1(int rank, String publicKey, int randomnum) {
+	public static BigInteger step1(int rank, BigInteger randomnum) throws Exception{
 		// 将A生成的大随机数用B的公钥加密
-		int c = RSA.encryptByPublicKey(randomnum, publicKey);// 用B的公钥加密
-		return c - rank;
+		BigInteger rankBig=new BigInteger(rank+"");
+		//BigInteger encryptC=RSA.encryptByPublicKey(randomnum);// 用B的公钥加密
+		String encrypNum=RsaTools.encryptBASE64(randomnum.toByteArray());
+		BigInteger encryptC=new BigInteger(Base64.decode(encrypNum));
+		return encryptC.subtract(rankBig);
+	}
+	
+	public static void main(String[]args){
+		try {
+			//step1(1, 2222);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	/**
 	 * 
 	 * @param mA
-	 *            A传给B的信息，可能是大整数，暂时定为int
+	 *            A传给B的信息，可能是大整数
 	 * @param rank
 	 *            军衔
 	 * @param privateKey
@@ -36,55 +53,60 @@ public class Millionnaire {
 	 *            A生成的大整数范围
 	 * @return
 	 */
-	public static int[] step2(int mA, int rank, String privateKey, int _Bbound) {
-		// BigInteger a=bound.nextProbablePrime();//这地方还有问题，应该是比bound稍小一点的大随机素数
-		_Bbound = 133;
-		BigInteger bi = new BigInteger(_Bbound + "");
-		while (!bi.isProbablePrime(20)) {
-			bi = bi.subtract(BigInteger.ONE);
+	public static int[] step2(BigInteger mA, int rank, BigInteger _Bbound) {
+		//BigInteger bi = new BigInteger(_Bbound + "");
+		while (!_Bbound.isProbablePrime(20)) {
+			_Bbound = _Bbound.subtract(BigInteger.ONE);
 		}
-		_Bbound = bi.intValue();
-		int p = _Bbound;// B生成的大随机素数
+		//_Bbound = _Bbound.intValue();
+		BigInteger p = _Bbound;// B生成的大随机素数
 		int[] y = new int[100];// 使用秘钥解密后的100个数
 		int[] z = new int[100];
 		int[] result = new int[101];
 		// 当1<=u<=100，计算mA+u通过秘钥解密后的值
 		for (int u = 1; u <= 100; u++) {
-			y[u - 1] = RSA.decryptByPrivateKey(mA + u, privateKey);
+			BigInteger _uBigInteger=new BigInteger(u+"");
+			byte[] decryptResult;
+			try {
+				decryptResult = RsaTools.decryptBASE64(mA.add(_uBigInteger).toString());
+				y[u-1]=DataTransfer.bytesToInt(decryptResult, 0);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
 		}
 		boolean pnum = false;// 素数P是否符合要求
-		while (!pnum) {// if pnum=false ,choose a p
-			// p=Prime.getPrime();//choose a big random number and smaller than
-			// x
-			for (int u = 1; u <= 100; u++) {
-				z[u - 1] = y[u - 1] / p;// y mod p
-			}
-			// 验证z
-			for (int u = 1; u <= 100; u++) {// validate z
-				if (z[u - 1] < 0 || z[u - 1] >= p - 1) {// validate for every u
-														// 0<z<p-1
-					pnum = false;
-					// 产生新的素数
-					while (!(Prime.isPrime(p--))) {
-						p--;
-					}
-				}
-				for (int v = 1; v <= 100; v++) {// validata for each u!=v
-												// |z[u-1]-z[v-1]|>=2
-					if (u != v) {
-						if (Math.abs(z[u - 1] - z[v - 1]) < 2) {
-							pnum = false;
-							// 产生新的素数
-							while (!(Prime.isPrime(p--))) {
-								p--;
-							}
-						}
-					}
-				}
-			}
-			pnum = true;
-			break;
-		}
+//		while (!pnum) {// if pnum=false ,choose a p
+//			// p=Prime.getPrime();//choose a big random number and smaller than
+//			// x
+//			for (int u = 1; u <= 100; u++) {
+//				z[u - 1] = y[u - 1] / p;// y mod p
+//			}
+//			// 验证z
+//			for (int u = 1; u <= 100; u++) {// validate z
+//				if (z[u - 1] < 0 || z[u - 1] >= p - 1) {// validate for every u
+//														// 0<z<p-1
+//					pnum = false;
+//					// 产生新的素数
+//					while (!p.isProbablePrime(20)) {
+//						p = p.subtract(BigInteger.ONE);
+//					}
+//				}
+//				for (int v = 1; v <= 100; v++) {// validata for each u!=v
+//												// |z[u-1]-z[v-1]|>=2
+//					if (u != v) {
+//						if (Math.abs(z[u - 1] - z[v - 1]) < 2) {
+//							pnum = false;
+//							// 产生新的素数
+//							while (!p.isProbablePrime(20)) {
+//								p = p.subtract(BigInteger.ONE);
+//							}
+//						}
+//					}
+//				}
+//			}
+//			pnum = true;
+//		}
 		// 生成结果序列
 		for (int u = 1; u < 101; u++) {
 			if (u <= rank) {
@@ -92,7 +114,7 @@ public class Millionnaire {
 			}
 			result[u - 1] = z[u - 1] + 1;
 		}
-		result[100] = p;
+		result[100] = p.intValue();
 		return result;
 
 	}

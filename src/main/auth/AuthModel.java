@@ -1,5 +1,6 @@
 package main.auth;
 
+import com.sun.glass.ui.Screen;
 import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
 import javafx.collections.ObservableList;
 import javafx.util.Callback;
@@ -47,9 +48,21 @@ public class AuthModel {
 				byte sourceType = data[0];
 				switch (sourceType) {
 				case Constant.LEVEL_MESSAGE_INT:
-					int levelAMessage = DataTransfer.bytesToInt(data, 1);
-					int bound = DataTransfer.bytesToInt(data, 5);
-					int[] results  = LevelCompare.callStep2(levelAMessage, bound);
+					int levellength=data[1];
+					int boundlength=data[2];
+					byte[] levelMessageByte=new byte[levellength];
+					byte[] boundMessageByte=new byte[boundlength];
+					for(int i=3;i<levellength+3;i++){
+						levelMessageByte[i-3]=data[i];
+					}
+					for(int i=levellength+3;i<data.length;i++){
+						boundMessageByte[i-levellength-3]=data[i];
+					}
+					BigInteger levelMessage=new BigInteger(levelMessageByte);
+					BigInteger boundMessage=new BigInteger(boundMessageByte);
+					//int levelAMessage = DataTransfer.bytesToInt(data, 1);
+					//int bound = DataTransfer.bytesToInt(data, 5);
+					int[] results  = LevelCompare.callStep2(levelMessage, boundMessage);
 					byte[] src = new byte[404];
 					for (int i = 0; i < results.length; i++) {
 						DataTransfer.intToBytes(results[i], src, 4 * i);
@@ -93,7 +106,11 @@ public class AuthModel {
 					int result=DataTransfer.bytesToInt(data, 1);
 					break;
 				case Constant.Broadcast_START_COMMANDER:
-					startCompare();
+					try {
+						startCompare();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 					break;
 				case Constant.Broadcast_START_AUTHENTICATION:
 					return "start auth";
@@ -142,16 +159,30 @@ public class AuthModel {
 
 	private static int maxbound = 999999999;
 	private static int minbound = 10000000;
-	private void startCompare(){
-		Inet4Address[] addresses = MainModel.getPeerDetector().GetPeerAddresses();//获取所有人的IP
+	private void startCompare() throws Exception{
+		Inet4Address[] addresses = MainModel.getPeerDetector().GetPeerAddresses();//鑾峰彇鎵�鏈変汉鐨処P
 		for (int i = 0; i < addresses.length; i++) {
 			Random rd = new Random();
-			int bound = rd.nextInt(maxbound) % (maxbound - minbound + 1) + minbound;// 生成一个较大的整数
+			int bound = rd.nextInt(maxbound) % (maxbound - minbound + 1) + minbound;// 鐢熸垚涓�涓緝澶х殑鏁存暟
 			int stepA = rd.nextInt(100);
-			int value = LevelCompare.callStep1(bound, stepA);
-			byte[] src=new byte[8];
-			DataTransfer.intToBytes(value,src,0);
-			DataTransfer.intToBytes(bound, src, 4);
+			BigInteger _bound=new BigInteger(bound+"");
+			BigInteger _stepA=new BigInteger(stepA+"");
+			BigInteger value=LevelCompare.callStep1(_bound,_stepA);
+			byte[] _valuebyte=value.toByteArray();
+			int lenthV=_valuebyte.length;
+			byte[] _boundbyte=_bound.toByteArray();
+			int lenthB=_boundbyte.length;
+			byte[] src=new byte[lenthV+lenthB+2];
+			src[0]=(byte) lenthV;
+			src[1]=(byte) lenthB;
+			for(int j=2;j<lenthV+2;j++){
+				src[j]=_valuebyte[j-2];
+			}
+			for(int k=lenthV+2;k<src.length;k++){
+				src[k]=_boundbyte[k];
+			}
+			//DataTransfer.intToBytes(value,src,0);
+			//DataTransfer.intToBytes(bound, src, 4);
 			try {
 				MainModel.getIspServer().send(addresses[i], src, Constant.LEVEL_MESSAGE_INT);
 			} catch (Exception e){

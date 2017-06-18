@@ -1,6 +1,7 @@
 package millionaire;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.net.Inet4Address;
 import java.net.SocketException;
 import java.util.Random;
@@ -22,23 +23,30 @@ public class LevelCompare {
 	private static boolean isLeader=true;
 	
 
-	public static void main(String []args) throws IOException{
+	public static void main(String []args) throws Exception{
 		try {
-			ISPServer server = MainModel.getIspServer();//»ñÈ¡È«¾ÖµÄserver
-			Inet4Address[] addresses = MainModel.getPeerDetector().GetPeerAddresses();//»ñÈ¡ËùÓĞÈËµÄIP
+			ISPServer server = MainModel.getIspServer();//è·å–å…¨å±€çš„server
+			Inet4Address[] addresses = MainModel.getPeerDetector().GetPeerAddresses();//è·å–æ‰€æœ‰äººçš„IP
 			for (int i = 0; i < addresses.length; i++){
+				
 				Random rd = new Random();
-				int bound = rd.nextInt(maxbound) % (maxbound - minbound + 1) + minbound;// Éú³ÉÒ»¸ö½Ï´óµÄÕûÊı
+				//BigInteger bound=new BigInteger(9,rd);
+				int bound = rd.nextInt(maxbound) % (maxbound - minbound + 1) + minbound;// ç”Ÿæˆä¸€ä¸ªè¾ƒå¤§çš„æ•´æ•°
 				int stepA = rd.nextInt(100);
-				int value=callStep1(bound,stepA);
-				byte[] src=DataTransfer.intToBytes(value);
-				DataTransfer.intToBytes(bound, src, 4);  
+				BigInteger _bound=new BigInteger(bound+"");
+				BigInteger _stepA=new BigInteger(stepA+"");
+				//BigInteger value=bound.add(_stepA);
+				BigInteger value=callStep1(_bound,_stepA);
+				System.out.println(value);
+				byte[] src=value.toByteArray();
+				int lenth=src.length;
+				DataTransfer.intToBytes(bound, src, lenth);  
 				server.send(addresses[i], src, Constant.LEVEL_MESSAGE_INT);
-				//ÓĞÒ»¸öÊ±¼ä
-				if(!isLeader){
-					System.out.println("you are not the leader");
-					continue;
-				}
+				//æœ‰ä¸€ä¸ªæ—¶é—´
+//				if(!isLeader){
+//					System.out.println("you are not the leader");
+//					continue;
+//				}
 				
 			}
 		} catch (SocketException e) {
@@ -46,34 +54,21 @@ public class LevelCompare {
 		}
 	}
 
-	public static int callStep1(int bound, int temp) {
-		int _Arandom = bound + temp;
-		x = _Arandom;
-		int MessageAtoB = Millionnaire.step1(MainModel.user.getLevel(), MainModel.user.getDescription(), _Arandom);
+	public static BigInteger callStep1(BigInteger bound,BigInteger temp) throws Exception {
+		BigInteger _Arandom=bound.add(temp);
+		//int _Arandom = bound + temp;
+		//x = _Arandom;
+		
+		//BigInteger MessageAtoB = Millionnaire.step1(MainModel.user.getLevel(), _Arandom);
+		BigInteger MessageAtoB = Millionnaire.step1(21, _Arandom);
 		return MessageAtoB;
-		// if(Millionnaire.step3(_Arandom, user1.getLevel(), results)){
-		// //AµÄ¾üÏÎĞ¡ÓÚ»òµÈÓÚB
-		// compareResults[i]=0;
-		// }else{
-		// //AµÄ¾üÏÎ´óÓÚB
-		// compareResults[i]=1;
-		// }
-		// }
-		// Èç¹ûÓĞÒ»¸öÊÇ0£¬ËµÃ÷AµÄ¾üÏÎ²»ÊÇ×î´óµÄ£¬Èç¹ûÈ«ÊÇ1ËµÃ÷AµÄ¾üÏÎÊÇ×î´óµÄ
-		// for(int i=0;i<compareResults.length;i++){
-		// if(compareResults[i]==0){
-		// return false;
-		// }
-		// }
-		// return true;
 	}
 
-	public static int[] callStep2(int messageFromOther,int bound) {
+	public static int[] callStep2(BigInteger messageFromOther,BigInteger bound) {
 		Random rd=new Random();
 		//int temp2=rd.nextInt(100);
 		//int _Brandom=bound-temp2;
-		int[] results = Millionnaire.step2(messageFromOther, MainModel.user.getLevel(),
-				MainModel.user.getDescription(),bound);
+		int[] results = Millionnaire.step2(messageFromOther, MainModel.user.getLevel(),bound);
 		return results;
 
 	}
