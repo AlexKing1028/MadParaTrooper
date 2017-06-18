@@ -92,8 +92,8 @@ public class LevelCompare {
 		//int _Arandom = bound + temp;
 		//x = _Arandom;
 		
-		//BigInteger MessageAtoB = Millionnaire.step1(MainModel.user.getLevel(), _Arandom);
-		BigInteger MessageAtoB = Millionnaire.step1(21, _Arandom);
+		BigInteger MessageAtoB = Millionnaire.step1(MainModel.user.getLevel(), _Arandom);
+		//BigInteger MessageAtoB = Millionnaire.step1(21, _Arandom);
 		return MessageAtoB;
 	}
 
@@ -101,8 +101,8 @@ public class LevelCompare {
 		Random rd=new Random();
 		//int temp2=rd.nextInt(100);
 		//int _Brandom=bound-temp2;
-		//int[] results = Millionnaire.step2(messageFromOther, MainModel.user.getLevel(),bound);
-		int[] results = Millionnaire.step2(messageFromOther, 8,bound);
+		int[] results = Millionnaire.step2(messageFromOther, MainModel.user.getLevel(),bound);
+		//int[] results = Millionnaire.step2(messageFromOther, 8,bound);
 		return results;
 
 	}
