@@ -99,13 +99,13 @@ public class Millionnaire {
 	 * @param z
 	 * @return
 	 */
-	public static boolean step3(int x, int rank, int[] z) {
+	public static int step3(int x, int rank, int[] z) {
 		if ((z[rank - 1] - x) / z[100] == 0) {
 			// RankA<=RankB
-			return true;
+			return 0;
 		} else {
 			// RankA>RankB
-			return false;
+			return 1;
 		}
 	}
 

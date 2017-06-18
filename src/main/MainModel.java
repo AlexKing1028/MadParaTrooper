@@ -20,7 +20,7 @@ public class MainModel {
     private static ISPServer ispServer;
     private static  PeerDetector peerDetector;
 
-    User user;
+    public static User user;
 
     public User load(){
         try{
