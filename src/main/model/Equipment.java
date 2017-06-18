@@ -46,7 +46,7 @@ public class Equipment implements Serializable{
 
     }
 
-    public boolean tryUnlock(Collection<Key> keys){
+    public int tryUnlock(Collection<Key> keys){
         int people = keys.size();
         Key[] param = keys.toArray(new Key[people]);
         return box.unLock(people, param);

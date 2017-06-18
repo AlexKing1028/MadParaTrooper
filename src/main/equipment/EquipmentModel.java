@@ -73,12 +73,16 @@ public class EquipmentModel {
                 case Constant.OPEN_REQUEST:
                     if (AuthModel.isCommander() && collected_keys!=null){
                         Key k = Key.fromBytes(data, 1);
-                        addKey(e, k);
-                        HashSet<Key> sk = collected_keys.get(e);
-                        if (e.tryUnlock(sk)){
+                        HashSet<Key> sk = addKey(e, k);
+                        int result =  e.tryUnlock(sk);
+                        if (result == 1){
+                            // pass
                             broadcastOpening(e);
-                        } else {
+                        } else if (result == -2){
+                            // wrong keys
                             sk.clear();
+                        } else{
+                            // people is not enough
                         };
                         return "ok";
                     }
@@ -154,12 +158,13 @@ public class EquipmentModel {
         }
     }
 
-    private void addKey(Equipment e, Key k){
+    private HashSet<Key> addKey(Equipment e, Key k){
         if (!collected_keys.containsKey(e)){
             collected_keys.put(e, new HashSet<>());
         }
         HashSet<Key> sk = collected_keys.get(e);
         sk.add(k);
+        return sk;
     }
 
 }
