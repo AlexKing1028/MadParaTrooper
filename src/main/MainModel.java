@@ -44,11 +44,8 @@ public class MainModel {
 
     public int connectWifi(){
         try{
-            /*
             int tmp = getPeerDetector().Initialize(user.getId());
             return tmp;
-            */
-            return 1;
         } catch (Exception e){
             e.printStackTrace();
         }

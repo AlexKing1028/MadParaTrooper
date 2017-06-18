@@ -3,6 +3,7 @@ package main.auth.client;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -12,7 +13,6 @@ import main.model.Trooper;
 import main.tools.BaseController;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
 import java.net.Inet4Address;
 import java.net.URL;
 import java.util.ArrayList;
@@ -29,7 +29,7 @@ public class AuthClientController extends BaseController{
     @FXML
     TextArea console;
     @FXML
-    TextArea refresh;
+    Button refresh;
     @FXML
     TableColumn<Trooper, String> column_id;
     @FXML
