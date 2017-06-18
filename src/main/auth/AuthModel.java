@@ -101,7 +101,7 @@ public class AuthModel {
 					}
 					if (compareResult == 1){
 						acceptCount++;
-						if (acceptCount == troopers.size()-1){
+						if (acceptCount == troopers.size()){
 							broadcastLeader();
 						}
 					} else {
