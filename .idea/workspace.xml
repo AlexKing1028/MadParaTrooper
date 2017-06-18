@@ -2,13 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="90900925-305a-41fc-b771-61463666780d" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/network/WLANControl.dll" afterPath="$PROJECT_DIR$/src/network/WLANControl.dll" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/MadParaTrooper/main/auth/hotspot/authhotspot.fxml" afterPath="$PROJECT_DIR$/out/production/MadParaTrooper/main/auth/hotspot/authhotspot.fxml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/MadParaTrooper/main/equipment/equipment.fxml" afterPath="$PROJECT_DIR$/out/production/MadParaTrooper/main/equipment/equipment.fxml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/MadParaTrooper/main/main.fxml" afterPath="$PROJECT_DIR$/out/production/MadParaTrooper/main/main.fxml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/auth/AuthModel.java" afterPath="$PROJECT_DIR$/src/main/auth/AuthModel.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/tools/Constant.java" afterPath="$PROJECT_DIR$/src/main/tools/Constant.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/user.txt" afterPath="$PROJECT_DIR$/user.txt" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
@@ -50,7 +46,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="AuthClientModel.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="AuthClientModel.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/auth/client/AuthClientModel.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="270">
@@ -95,6 +91,16 @@
           </provider>
         </entry>
       </file>
+      <file leaf-file-name="user.txt" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/user.txt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
     </leaf>
   </component>
   <component name="FileTemplateManagerImpl">
@@ -134,10 +140,10 @@
         <option value="$PROJECT_DIR$/src/network/PeerDetectorServer.java" />
         <option value="$PROJECT_DIR$/src/main/auth/client/AuthClientController.java" />
         <option value="$PROJECT_DIR$/src/main/auth/hotspot/AuthHotspotController.java" />
-        <option value="$PROJECT_DIR$/user.txt" />
         <option value="$PROJECT_DIR$/src/main/tools/Constant.java" />
         <option value="$PROJECT_DIR$/src/main/auth/AuthModel.java" />
         <option value="$PROJECT_DIR$/src/main/auth/client/AuthClientModel.java" />
+        <option value="$PROJECT_DIR$/user.txt" />
       </list>
     </option>
   </component>
@@ -754,7 +760,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="7" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -1183,14 +1189,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/user.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="54">
-          <caret line="3" column="10" lean-forward="false" selection-start-line="3" selection-start-column="10" selection-end-line="3" selection-end-column="10" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/network/PeerDetector.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="182">
@@ -1273,6 +1271,14 @@
             <element signature="e#751#752#0" expanded="true" />
             <element signature="e#786#787#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/user.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
