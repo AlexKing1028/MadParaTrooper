@@ -12,11 +12,11 @@ public class RSA {
 
 	public static int encryptByPublicKey(int bignum, String publicKey) {
 		// TODO Auto-generated method stub
-		return 0;
+		return bignum;
 	}
 
 	public static int decryptByPrivateKey(int i, String privateKey) {
 		// TODO Auto-generated method stub
-		return 0;
+		return i;
 	}
 }

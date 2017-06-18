@@ -12,6 +12,7 @@ import millionaire.LevelCompare;
 import network.ISPServer;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.net.DatagramPacket;
 import java.net.Inet4Address;
 import java.util.ArrayList;
@@ -48,7 +49,7 @@ public class AuthModel {
 				case Constant.LEVEL_MESSAGE_INT:
 					int levelAMessage = DataTransfer.bytesToInt(data, 1);
 					int bound = DataTransfer.bytesToInt(data, 5);
-					int[] results = LevelCompare.callStep2(levelAMessage, bound);
+					int[] results  = LevelCompare.callStep2(levelAMessage, bound);
 					byte[] src = new byte[404];
 					for (int i = 0; i < results.length; i++) {
 						DataTransfer.intToBytes(results[i], src, 4 * i);
