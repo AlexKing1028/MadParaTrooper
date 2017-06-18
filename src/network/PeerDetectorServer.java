@@ -27,6 +27,7 @@ public class PeerDetectorServer extends Thread {
         clientSocket = new DatagramSocket(9875, localAddress);
         this.networkPrefixLength = networkPrefixLength;
         peers = new HashMap<Inet4Address, Integer>();
+        this.id = id;
     }
 
     public void run() {
