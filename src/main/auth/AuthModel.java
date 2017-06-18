@@ -1,10 +1,7 @@
 package main.auth;
 
-<<<<<<< HEAD
 import com.sun.glass.ui.Screen;
-=======
 import com.sun.javafx.robot.impl.FXRobotHelper;
->>>>>>> ac7c0ab42c06a5ec2063b538bea5aa73ff070f1a
 import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
@@ -201,10 +198,8 @@ public class AuthModel {
 				src[j]=_valuebyte[j-2];
 			}
 			for(int k=lenthV+2;k<src.length;k++){
-				src[k]=_boundbyte[k];
+				src[k]=_boundbyte[k-lenthV-2];
 			}
-			//DataTransfer.intToBytes(value,src,0);
-			//DataTransfer.intToBytes(bound, src, 4);
 			try {
 				MainModel.getIspServer().send(addresses[i], src, Constant.LEVEL_MESSAGE_INT);
 			} catch (Exception e){

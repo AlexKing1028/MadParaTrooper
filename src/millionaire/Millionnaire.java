@@ -69,13 +69,14 @@ public class Millionnaire {
 			byte[] decryptResult;
 			try {
 				decryptResult = RsaTools.decryptBASE64(mA.add(_uBigInteger).toString());
-				y[u-1]=DataTransfer.bytesToInt(decryptResult, 0);
+				byte[] decoderesult=Base64.decode(decryptResult.toString());
+				y[u-1]=DataTransfer.bytesToInt(decoderesult, 0);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			
 		}
-		boolean pnum = false;// 素数P是否符合要求
+//		boolean pnum = false;// 素数P是否符合要求
 //		while (!pnum) {// if pnum=false ,choose a p
 //			// p=Prime.getPrime();//choose a big random number and smaller than
 //			// x

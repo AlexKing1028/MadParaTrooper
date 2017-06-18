@@ -20,14 +20,13 @@ public class LevelCompare {
 	private static int maxbound = 999999999;
 	private static int minbound = 10000000;
 	private static int x;
-	private static boolean isLeader=true;
 	
 
 	public static void main(String []args) throws Exception{
 		try {
-			ISPServer server = MainModel.getIspServer();//获取全局的server
-			Inet4Address[] addresses = MainModel.getPeerDetector().GetPeerAddresses();//获取所有人的IP
-			for (int i = 0; i < addresses.length; i++){
+			//ISPServer server = MainModel.getIspServer();//获取全局的server
+			//Inet4Address[] addresses = MainModel.getPeerDetector().GetPeerAddresses();//获取所有人的IP
+			//for (int i = 0; i < addresses.length; i++){
 				
 				Random rd = new Random();
 				//BigInteger bound=new BigInteger(9,rd);
@@ -40,17 +39,50 @@ public class LevelCompare {
 				System.out.println(value);
 				byte[] src=value.toByteArray();
 				int lenth=src.length;
-				DataTransfer.intToBytes(bound, src, lenth);  
-				server.send(addresses[i], src, Constant.LEVEL_MESSAGE_INT);
-				//有一个时间
-//				if(!isLeader){
-//					System.out.println("you are not the leader");
-//					continue;
-//				}
+				////////////
+				//DataTransfer.intToBytes(bound, src, lenth); 
+				////////////
+				//server.send(addresses[i], src, Constant.LEVEL_MESSAGE_INT);
 				
-			}
+				byte[] _valuebyte=value.toByteArray();
+				int lenthV=_valuebyte.length;
+				byte[] _boundbyte=_bound.toByteArray();
+				int lenthB=_boundbyte.length;
+				byte[] src1=new byte[lenthV+lenthB+2];
+				src1[0]=(byte) lenthV;
+				src1[1]=(byte) lenthB;
+				for(int j=2;j<lenthV+2;j++){
+					src1[j]=_valuebyte[j-2];
+				}
+				for(int k=lenthV+2;k<src1.length;k++){
+					src1[k]=_boundbyte[k-lenthV-2];
+				}
+				test(src1);
+				
+			//}
 		} catch (SocketException e) {
 			e.printStackTrace();
+		}
+	}
+	
+	public static void test(byte[] data){
+		int levellength=data[0];
+		int boundlength=data[1];
+		byte[] levelMessageByte=new byte[levellength];
+		byte[] boundMessageByte=new byte[boundlength];
+		for(int i=2;i<levellength+2;i++){
+			levelMessageByte[i-2]=data[i];
+		}
+		for(int i=levellength+2;i<data.length;i++){
+			boundMessageByte[i-levellength-2]=data[i];
+		}
+		BigInteger levelMessage=new BigInteger(levelMessageByte);
+		BigInteger boundMessage=new BigInteger(boundMessageByte);
+		//int levelAMessage = DataTransfer.bytesToInt(data, 1);
+		//int bound = DataTransfer.bytesToInt(data, 5);
+		int[] results  = LevelCompare.callStep2(levelMessage, boundMessage);
+		for(int j=0;j<results.length;j++){
+			System.out.print(results[j]+" ");
 		}
 	}
 
@@ -68,17 +100,16 @@ public class LevelCompare {
 		Random rd=new Random();
 		//int temp2=rd.nextInt(100);
 		//int _Brandom=bound-temp2;
-		int[] results = Millionnaire.step2(messageFromOther, MainModel.user.getLevel(),bound);
+		//int[] results = Millionnaire.step2(messageFromOther, MainModel.user.getLevel(),bound);
+		int[] results = Millionnaire.step2(messageFromOther, 8,bound);
 		return results;
 
 	}
 	
 	public static int callStep3(int []result){
 		if(Millionnaire.step3(x, MainModel.user.getLevel(), result)==1){
-			isLeader=true;
 			return 1;
 		}else{
-			isLeader=false;
 			return 0;
 		}
 	}
