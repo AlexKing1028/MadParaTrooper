@@ -105,11 +105,11 @@ public class AuthModel {
                     if (!MainModel.getPeerDetector().GetLocalAddress().equals(srcnet)){
                         commander = false;
                         commanderIP = srcnet.getHostAddress();
-                        Platform.runLater(()->{
-                            ObservableList<Stage> stages = FXRobotHelper.getStages();
-                            stages.get(0).setScene(SceneManager.create("equipment/equipment.fxml"));
-                        });
                     }
+                    Platform.runLater(()->{
+                        ObservableList<Stage> stages = FXRobotHelper.getStages();
+                        stages.get(0).setScene(SceneManager.create("equipment/equipment.fxml"));
+                    });
                     break;
 				case Constant.Broadcast_START_AUTHENTICATION:
 				    startAuthentication();
