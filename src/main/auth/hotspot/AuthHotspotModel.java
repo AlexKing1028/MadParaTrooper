@@ -104,7 +104,7 @@ public class AuthHotspotModel extends AuthModel{
         byte[] content = new byte[1];
         content[0] = '.';
         try{
-            MainModel.getIspServer().sendBroadcast(content, Constant.Broadcast_IM_LEADER);
+            MainModel.getIspServer().sendBroadcast(content, Constant.Broadcast_START_COMMANDER);
         } catch (Exception e){
             e.printStackTrace();
         }
