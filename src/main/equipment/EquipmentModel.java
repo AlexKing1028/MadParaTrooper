@@ -73,7 +73,7 @@ public class EquipmentModel {
                     return "invalid id";
                 case Constant.OPEN_REQUEST:
                     if (AuthModel.isCommander() && collected_keys!=null){
-                        Key k = Key.fromBytes(data, 2);
+                        Key k = Key.fromBytes(data, 5);
                         HashSet<Key> sk = addKey(e, k);
                         int result =  e.tryUnlock(sk);
                         if (result == 1){
