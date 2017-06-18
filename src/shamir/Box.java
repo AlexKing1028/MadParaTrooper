@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Random;
 
 public class Box implements Serializable{
+	private static final long serialVersionUID = 9222843820698308538l;
 	private double lock;
 	private int least_people;
 	
@@ -36,9 +37,9 @@ public class Box implements Serializable{
 		return keys;
 	}
 	
-	public boolean unLock(int people, Key[] keys) {
+	public int unLock(int people, Key[] keys) {
 		if (people < least_people)
-			return false;
+			return -1;
 		double[][] coef = new double[least_people][least_people + 1];
 		for (int i = 0; i < least_people; i++) {
 			coef[i][0] = keys[i].y;
@@ -60,8 +61,8 @@ public class Box implements Serializable{
 		}
 		double a = coef[0][0] / coef[0][1];
 		if (lock - a > -1 && lock - a < 1)
-			return true;
+			return 1;
 		else
-			return false;
+			return -2;
 	}
 }

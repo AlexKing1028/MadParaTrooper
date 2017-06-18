@@ -1,14 +1,21 @@
 package main.auth;
 
+<<<<<<< HEAD
 import com.sun.glass.ui.Screen;
+=======
+import com.sun.javafx.robot.impl.FXRobotHelper;
+>>>>>>> ac7c0ab42c06a5ec2063b538bea5aa73ff070f1a
 import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
+import javafx.stage.Stage;
 import javafx.util.Callback;
 import main.Main;
 import main.MainModel;
 import main.model.Trooper;
 import main.tools.Constant;
 import main.tools.DataTransfer;
+import main.tools.SceneManager;
 import millionaire.LevelCompare;
 import network.ISPServer;
 
@@ -16,6 +23,7 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.net.DatagramPacket;
 import java.net.Inet4Address;
+import java.net.Inet6Address;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -85,7 +93,7 @@ public class AuthModel {
 					}
 					int compareResult=LevelCompare.callStep3(list);
 					byte[] src1=new byte[4];
-					src1=DataTransfer.intToBytes(compareResult);
+					src1=DataTransfer.intToBytes(compareResult, src1, 0);
 					try {
 						MainModel.getIspServer().send((Inet4Address) param.getAddress(), src1,
 								Constant.LEVEL_COMPARE_RESULT);
@@ -112,7 +120,17 @@ public class AuthModel {
 						e.printStackTrace();
 					}
 					break;
+                case Constant.Broadcast_IM_LEADER:
+                    Inet4Address srcnet = ((Inet4Address) param.getAddress());
+                    commander = MainModel.getPeerDetector().GetLocalAddress().equals(srcnet);
+                    commanderIP = srcnet.getHostAddress();
+                    Platform.runLater(()->{
+                        ObservableList<Stage> stages = FXRobotHelper.getStages();
+                        stages.get(0).setScene(SceneManager.create("equipment/equipment.fxml"));
+                    });
+                    break;
 				case Constant.Broadcast_START_AUTHENTICATION:
+				    startAuthentication();
 					return "start auth";
 				}
 				return "ok";
@@ -156,6 +174,10 @@ public class AuthModel {
     		e.printStackTrace();
 		}
 	}
+
+	private void startAuthentication(){
+
+    }
 
 	private static int maxbound = 999999999;
 	private static int minbound = 10000000;

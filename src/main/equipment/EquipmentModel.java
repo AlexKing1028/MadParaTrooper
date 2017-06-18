@@ -6,6 +6,7 @@ import main.MainModel;
 import main.auth.AuthModel;
 import main.model.Equipment;
 import main.tools.Constant;
+import main.tools.DataTransfer;
 import shamir.Key;
 
 import java.io.FileInputStream;
@@ -22,8 +23,8 @@ import java.util.List;
  * Created by wesley shi on 2017/6/14.
  */
 public class EquipmentModel {
-    ObservableList<Equipment> equipments;
-    HashMap<Equipment, HashSet<Key>> collected_keys;
+    private ObservableList<Equipment> equipments;
+    private HashMap<Equipment, HashSet<Key>> collected_keys;
     public EquipmentModel(ObservableList<Equipment> equips){
         equipments = equips;
         callbacks.add(response);
@@ -47,7 +48,7 @@ public class EquipmentModel {
 
             byte[] data = param.getData();
             byte sourceType = data[0];
-            String id = data[1]+"";
+            String id = DataTransfer.bytesToInt(data, 1)+"";
             int len = equipments.size();
             int i =0;
             Equipment e = null;
@@ -73,12 +74,16 @@ public class EquipmentModel {
                 case Constant.OPEN_REQUEST:
                     if (AuthModel.isCommander() && collected_keys!=null){
                         Key k = Key.fromBytes(data, 1);
-                        addKey(e, k);
-                        HashSet<Key> sk = collected_keys.get(e);
-                        if (e.tryUnlock(sk)){
+                        HashSet<Key> sk = addKey(e, k);
+                        int result =  e.tryUnlock(sk);
+                        if (result == 1){
+                            // pass
                             broadcastOpening(e);
-                        } else {
+                        } else if (result == -2){
+                            // wrong keys
                             sk.clear();
+                        } else{
+                            // people is not enough
                         };
                         return "ok";
                     }
@@ -119,22 +124,15 @@ public class EquipmentModel {
             // sending request to commander
             try{
                 Inet4Address commander = ((Inet4Address) InetAddress.getByName(AuthModel.getCommanderIP()));
-                byte[] data = new byte[Key.getByteLen()];
+                byte[] data = new byte[Key.getByteLen() + Integer.BYTES];
+                int eid = Integer.parseInt(equipment.getId());
                 Key k = equipment.getKey();
-                data = k.toBytes(data, 0);
+                data = DataTransfer.intToBytes(eid, data, 0);
+                data = k.toBytes(data, Integer.BYTES);
                 MainModel.getIspServer().send(commander, data, Constant.OPEN_REQUEST);
             } catch (Exception e){
                 e.printStackTrace();
             }
-            Thread t = new Thread(()->{
-                // send message
-                try{
-                    Thread.sleep(2000);
-                } catch (InterruptedException ie){
-                    ie.printStackTrace();
-                }
-            });
-            t.start();
         }
     }
 
@@ -154,12 +152,13 @@ public class EquipmentModel {
         }
     }
 
-    private void addKey(Equipment e, Key k){
+    private HashSet<Key> addKey(Equipment e, Key k){
         if (!collected_keys.containsKey(e)){
             collected_keys.put(e, new HashSet<>());
         }
         HashSet<Key> sk = collected_keys.get(e);
         sk.add(k);
+        return sk;
     }
 
 }
