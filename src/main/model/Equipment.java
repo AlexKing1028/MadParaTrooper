@@ -1,15 +1,28 @@
 package main.model;
 
+import shamir.Box;
+import shamir.Key;
+
+import java.io.Serializable;
+
 /**
  * Created by wesley shi on 2017/6/13.
  */
-public class Equipment {
+public class Equipment implements Serializable{
     String id;
+    Box box;
+    Key key;
     String description;
 
-    public Equipment(String id, String description) {
+    public Equipment(String id, Box box, Key key, String description) {
         this.id = id;
         this.description = description;
+        this.box = box;
+        this.key = key;
+    }
+
+    public Key getKey() {
+        return key;
     }
 
     public String getId() {

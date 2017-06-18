@@ -6,6 +6,7 @@ import main.MainModel;
 import main.auth.AuthModel;
 import main.model.Trooper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -63,6 +64,25 @@ public class AuthHotspotModel extends AuthModel{
      * @return trusted troopers
      */
     private List<Trooper> filterTroopers(byte[] param){
+
         return null;
+    }
+
+    /**
+     * get the trusted member
+     * @param graph
+     * @param size
+     * @param host
+     * @return
+     */
+    private List<Integer> filtering(boolean[][] graph, int size, int host){
+        List<Integer> li = new ArrayList<>();
+        li.add(host);
+        for (int i=0; i<size; i++){
+            if (i!=host && graph[host][i]){
+                li.add(i);
+            }
+        }
+        return li;
     }
 }

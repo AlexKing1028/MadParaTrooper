@@ -5,12 +5,14 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import main.model.Equipment;
 import main.tools.BaseController;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -30,12 +32,15 @@ public class EquipmentController extends BaseController{
     public void initialize(URL location, ResourceBundle resources) {
         // TODO (don't really need to do anything here).
         ObservableList<Equipment> oe = FXCollections.observableArrayList();
+
         em = new EquipmentModel(oe);
         // mock
-        em.addItem(new Equipment("10", "abfabfefaefwfwee3"));
-        em.addItem(new Equipment("11", "ababffefaefwfw223"));
-        em.addItem(new Equipment("12", "ababfabfefwfw221"));
-        em.addItem(new Equipment("13", "ababfabfefaef12"));
+        /*
+        em.addItem(new Equipment("10", null, null,"abfabfefaefwfwee3"));
+        em.addItem(new Equipment("11", null, null,"ababffefaefwfw223"));
+        em.addItem(new Equipment("12", null, null,"ababfabfefwfw221"));
+        em.addItem(new Equipment("13", null, null,"ababfabfefaef12"));
+        */
 
         requests.setItems(oe);
         requests.setCellFactory(list->{
@@ -68,5 +73,13 @@ public class EquipmentController extends BaseController{
             });
             return le;
         });
+        Thread t = new Thread(new Task<Integer>() {
+            @Override
+            protected Integer call() throws Exception {
+                em.loadData();
+                return 1;
+            }
+        });
+        t.start();
     }
 }

@@ -38,7 +38,22 @@ public class AuthModel {
     }
 
     public void refreshList(Inet4Address[] addresses){
-
+        int len = troopers.size();
+        for (Inet4Address address: addresses){
+            boolean exist = false;
+            // check if existed
+            for (int i=0; i<len; i++){
+                if (address.getHostAddress().equals(troopers.get(i).getIp())){
+                    exist = true;
+                    break;
+                }
+            }
+            if (!exist){
+                // add new address
+                Trooper trooper=new Trooper("", address.getHostAddress());
+                troopers.add(trooper);
+            }
+        }
     }
 
     public static boolean isCommander(){

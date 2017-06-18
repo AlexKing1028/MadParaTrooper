@@ -14,6 +14,8 @@ import javafx.util.Callback;
  * Created by Ningchen Wang on 6/17/2017.
  */
 public class ISPServer extends Thread {
+    private boolean debug = false;
+
     private Inet4Address localAddress;
     private DatagramSocket serverSocket;
     private DatagramSocket clientSocket;
@@ -30,8 +32,10 @@ public class ISPServer extends Thread {
     public ISPServer(Inet4Address localAddress) throws SocketException {
         this.localAddress = localAddress;
         networkPrefixLength = 24;
-        serverSocket = new DatagramSocket(9874, localAddress);
-        clientSocket = new DatagramSocket(9873, localAddress);
+        if (!debug) {
+            serverSocket = new DatagramSocket(9874, localAddress);
+            clientSocket = new DatagramSocket(9873, localAddress);
+        }
     }
 
     public void setCallbacks(List<Callback<byte[], String>> callBacks){

@@ -6,6 +6,9 @@ import main.MainModel;
 import main.auth.AuthModel;
 import main.model.Equipment;
 
+import java.io.FileInputStream;
+import java.io.ObjectInputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -31,6 +34,13 @@ public class EquipmentModel {
     };
 
     public void loadData(){
+        try{
+            ObjectInputStream ois = new ObjectInputStream(new FileInputStream("equipments.obj"));
+            ArrayList<Equipment> ae = ((ArrayList<Equipment>) ois.readObject());
+            equipments.addAll(ae);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
         // read from file...
     }
 
@@ -71,4 +81,5 @@ public class EquipmentModel {
         // broadcast to all troopers
         // ....
     }
+
 }

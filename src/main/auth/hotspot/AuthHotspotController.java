@@ -15,6 +15,7 @@ import main.tools.BaseController;
 import main.tools.SceneManager;
 
 import java.net.Inet4Address;
+import java.net.Inet6Address;
 import java.net.URL;
 import java.util.Optional;
 import java.util.Random;
@@ -123,7 +124,15 @@ public class AuthHotspotController extends BaseController{
     }
 
     public void refresh(ActionEvent actionEvent){
-        Inet4Address[] addresses = MainModel.getPeerDetector().GetPeerAddresses();
+        //Inet4Address[] addresses = MainModel.getPeerDetector().GetPeerAddresses();
+        Inet4Address[] addresses = new Inet4Address[10];
+        for (int i=0; i< 10; i++){
+            try{
+                addresses[i] = ((Inet4Address) Inet4Address.getByName("192.168.0." + i));
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+        }
         ahm.refreshList(addresses);
     }
 

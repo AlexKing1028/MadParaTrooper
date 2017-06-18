@@ -3,3 +3,4 @@ out/._.DS_Store
 out/.DS_Store
 src/.DS_Store
 *.class
+/bin/

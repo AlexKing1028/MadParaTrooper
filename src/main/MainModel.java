@@ -10,6 +10,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.SocketException;
 import java.time.Period;
 
 /**
@@ -43,8 +44,11 @@ public class MainModel {
 
     public int connectWifi(){
         try{
+            /*
             int tmp = getPeerDetector().Initialize(user.getId());
             return tmp;
+            */
+            return 1;
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -55,7 +59,11 @@ public class MainModel {
      * init ispServer
      */
     static void initIspServer(){
-
+        try{
+            ispServer = new ISPServer(null);
+        }catch (SocketException se){
+            se.printStackTrace();
+        }
     }
 
     public static ISPServer getIspServer(){
