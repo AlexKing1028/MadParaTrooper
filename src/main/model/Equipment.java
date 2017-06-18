@@ -11,6 +11,7 @@ import java.util.List;
  * Created by wesley shi on 2017/6/13.
  */
 public class Equipment implements Serializable{
+    private static final long serialVersionUID = -2531769049317499436l;
     String id;
     Box box;
     Key key;
