@@ -4,6 +4,7 @@ import java.net.Inet4Address;
 import java.net.InterfaceAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -34,7 +35,7 @@ public class PeerDetector {
 		for (InterfaceAddress n : iNetAddresses) {
 			if (n.getAddress() instanceof Inet4Address) {
 				System.out.println(n.getBroadcast().toString() + ' ' + n.getNetworkPrefixLength());
-				peerDetectorServer = new PeerDetectorServer((Inet4Address)n.getAddress(), (short)24);
+				peerDetectorServer = new PeerDetectorServer((Inet4Address)n.getAddress(), (short)24, id);
 				peerDetectorServer.start();
 				break;
 			}
@@ -54,5 +55,9 @@ public class PeerDetector {
     
     public Inet4Address[] GetPeerAddresses() {
     	return peerDetectorServer.GetPeerAddresses();
+    }
+    
+    public HashMap<Inet4Address, Integer> GetPeerIDMap() {
+    	return peerDetectorServer.GetPeerIDMap();
     }
 }
