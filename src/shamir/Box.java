@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Random;
 
 public class Box implements Serializable{
+	private static final long serialVersionUID = 9222843820698308538l;
 	private double lock;
 	private int least_people;
 	
