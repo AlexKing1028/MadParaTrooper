@@ -102,10 +102,8 @@ public class AuthModel {
 					break;
                 case Constant.Broadcast_IM_LEADER:
                     Inet4Address srcnet = ((Inet4Address) param.getAddress());
-                    if (!MainModel.getPeerDetector().GetLocalAddress().equals(srcnet)){
-                        commander = false;
-                        commanderIP = srcnet.getHostAddress();
-                    }
+                    commander = MainModel.getPeerDetector().GetLocalAddress().equals(srcnet);
+                    commanderIP = srcnet.getHostAddress();
                     Platform.runLater(()->{
                         ObservableList<Stage> stages = FXRobotHelper.getStages();
                         stages.get(0).setScene(SceneManager.create("equipment/equipment.fxml"));
