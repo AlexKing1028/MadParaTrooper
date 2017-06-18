@@ -115,6 +115,7 @@ public class ISPServer extends Thread {
     	buf[0] = sourceType;
     	System.arraycopy(content, 0, buf, 1, content.length);
     	DatagramPacket sendPacket = new DatagramPacket(buf, buf.length, dst, 9874);
+    	System.out.println("SEND: "+dst+" "+ new String(buf));
     	clientSocket.send(sendPacket);
     }
     

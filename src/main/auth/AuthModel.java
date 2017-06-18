@@ -49,7 +49,7 @@ public class AuthModel {
 					int levelAMessage = DataTransfer.bytesToInt(data, 1);
 					int bound = DataTransfer.bytesToInt(data, 5);
 					int[] results = LevelCompare.callStep2(levelAMessage, bound);
-					byte[] src = new byte[0];
+					byte[] src = new byte[404];
 					for (int i = 0; i < results.length; i++) {
 						DataTransfer.intToBytes(results[i], src, 4 * i);
 					}
@@ -70,7 +70,8 @@ public class AuthModel {
 						list[i]=z;
 					}
 					int compareResult=LevelCompare.callStep3(list);
-					byte[] src1=DataTransfer.intToBytes(compareResult);
+					byte[] src1=new byte[4];
+					src1=DataTransfer.intToBytes(compareResult);
 					try {
 						MainModel.getIspServer().send((Inet4Address) param.getAddress(), src1,
 								Constant.LEVEL_COMPARE_RESULT);
@@ -92,6 +93,9 @@ public class AuthModel {
 					break;
 				case Constant.Broadcast_START_COMMANDER:
 					startCompare();
+					break;
+				case Constant.Broadcast_START_AUTHENTICATION:
+					return "start auth";
 				}
 				return "ok";
 			}
@@ -144,7 +148,8 @@ public class AuthModel {
 			int bound = rd.nextInt(maxbound) % (maxbound - minbound + 1) + minbound;// 生成一个较大的整数
 			int stepA = rd.nextInt(100);
 			int value = LevelCompare.callStep1(bound, stepA);
-			byte[] src = DataTransfer.intToBytes(value);
+			byte[] src=new byte[8];
+			DataTransfer.intToBytes(value,src,0);
 			DataTransfer.intToBytes(bound, src, 4);
 			try {
 				MainModel.getIspServer().send(addresses[i], src, Constant.LEVEL_MESSAGE_INT);

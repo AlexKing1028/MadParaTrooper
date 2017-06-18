@@ -55,6 +55,9 @@ public class Controller extends BaseController{
                  * set up subnet
                  */
                 int result = mm.connectWifi();
+                if (result >0){
+                    MainModel.getIspServer().start();
+                }
                 Platform.runLater(()->{
                     switch (result){
                         case -1:
@@ -64,13 +67,11 @@ public class Controller extends BaseController{
                             break;
                             */
                         case 1:
-                            mm.getIspServer();
                             ObservableList<Stage> stages1 = FXRobotHelper.getStages();
                             stages1.get(0).setScene(SceneManager.create("auth/hotspot/authhotspot.fxml"));
                             break;
                         case 2:
                         case 3:
-                            mm.getIspServer();
                             ObservableList<Stage> stages = FXRobotHelper.getStages();
                             stages.get(0).setScene(SceneManager.create("auth/client/authclient.fxml"));
                             break;
