@@ -55,12 +55,13 @@ public class AuthModel {
 				case Constant.LEVEL_MESSAGE_INT:
 					int levellength=data[1];
 					int boundlength=data[2];
+					int length=levellength+boundlength+3;
 					byte[] levelMessageByte=new byte[levellength];
 					byte[] boundMessageByte=new byte[boundlength];
 					for(int i=3;i<levellength+3;i++){
 						levelMessageByte[i-3]=data[i];
 					}
-					for(int i=levellength+3;i<data.length;i++){
+					for(int i=levellength+3;i<length;i++){
 						boundMessageByte[i-levellength-3]=data[i];
 					}
 					BigInteger levelMessage=new BigInteger(levelMessageByte);

@@ -68,12 +68,13 @@ public class LevelCompare {
 	public static void test(byte[] data){
 		int levellength=data[0];
 		int boundlength=data[1];
+		int length=levellength+boundlength+2;
 		byte[] levelMessageByte=new byte[levellength];
 		byte[] boundMessageByte=new byte[boundlength];
 		for(int i=2;i<levellength+2;i++){
 			levelMessageByte[i-2]=data[i];
 		}
-		for(int i=levellength+2;i<data.length;i++){
+		for(int i=levellength+2;i<length;i++){
 			boundMessageByte[i-levellength-2]=data[i];
 		}
 		BigInteger levelMessage=new BigInteger(levelMessageByte);
