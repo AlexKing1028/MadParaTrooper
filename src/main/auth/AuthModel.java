@@ -2,6 +2,7 @@ package main.auth;
 
 import javafx.collections.ObservableList;
 import javafx.util.Callback;
+import main.Main;
 import main.MainModel;
 import main.model.Trooper;
 import main.tools.Constant;
@@ -12,6 +13,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.Inet4Address;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -68,7 +70,6 @@ public class AuthModel {
 				case Constant.LEVEL_COMPARE_RESULT:
 					int result=DataTransfer.bytesToInt(data, 1);
 				}
-
 				return "ok";
 			}
 		});
@@ -76,25 +77,26 @@ public class AuthModel {
 		MainModel.getIspServer().setCallbacks(callbacks);
 	}
 
-	public void refreshList(Inet4Address[] addresses) {
-		int len = troopers.size();
-		for (Inet4Address address : addresses) {
-			boolean exist = false;
-			// check if existed
-			for (int i = 0; i < len; i++) {
-				if (address.getHostAddress().equals(troopers.get(i).getIp())) {
-					exist = true;
-					break;
-				}
-			}
-			if (!exist) {
-				// add new address
-				Trooper trooper = new Trooper("", address.getHostAddress());
-				troopers.add(trooper);
-			}
-		}
-	}
-
+    public void refreshList(Inet4Address[] addresses){
+        int len = troopers.size();
+        HashMap<Inet4Address, Integer> id_map = MainModel.getPeerDetector().GetPeerIDMap();
+        for (Inet4Address address: addresses){
+            boolean exist = false;
+            // check if existed
+            for (int i=0; i<len; i++){
+                if (address.getHostAddress().equals(troopers.get(i).getIp())){
+                    exist = true;
+                    break;
+                }
+            }
+            if (!exist){
+                // add new address
+                Trooper trooper=new Trooper(id_map.getOrDefault(address, -1)+"", address.getHostAddress());
+                troopers.add(trooper);
+            }
+        }
+    }
+	
 	public static boolean isCommander() {
 		return commander;
 	}

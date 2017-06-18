@@ -57,10 +57,12 @@ public class AuthHotspotController extends BaseController{
         ahm = new AuthHotspotModel(troopers);
         iplist.setItems(troopers);
         // mock data
+        /*
         ahm.addItem(new Trooper("1000", "192.168.0.2"));
         ahm.addItem(new Trooper("1001", "192.168.0.8"));
         ahm.addItem(new Trooper("1003", "192.168.0.3"));
         ahm.addItem(new Trooper("1005", "192.168.0.5"));
+        */
         // connect to each column...
         column_id.setCellValueFactory(new PropertyValueFactory<>("id"));
         column_ip.setCellValueFactory(new PropertyValueFactory<>("ip"));
@@ -87,6 +89,7 @@ public class AuthHotspotController extends BaseController{
             });
             return row;
         });
+        refresh(null);
     }
 
     public void startAuthentication(ActionEvent actionEvent){
@@ -127,8 +130,9 @@ public class AuthHotspotController extends BaseController{
     }
 
     public void refresh(ActionEvent actionEvent){
-        //Inet4Address[] addresses = MainModel.getPeerDetector().GetPeerAddresses();
-        Inet4Address[] addresses = new Inet4Address[10];
+        Inet4Address[] addresses = MainModel.getPeerDetector().GetPeerAddresses();
+        //Inet4Address[] addresses = new Inet4Address[10];
+        /*
         for (int i=0; i< 10; i++){
             try{
                 addresses[i] = ((Inet4Address) Inet4Address.getByName("192.168.0." + i));
@@ -136,6 +140,7 @@ public class AuthHotspotController extends BaseController{
                 e.printStackTrace();
             }
         }
+        */
         ahm.refreshList(addresses);
     }
 

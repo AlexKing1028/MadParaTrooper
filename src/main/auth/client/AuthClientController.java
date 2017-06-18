@@ -46,12 +46,14 @@ public class AuthClientController extends BaseController{
         iplist.setItems(troopers);
         acm = new AuthClientModel(troopers);
         // mock data
+        /*
         List<Trooper> lts = new ArrayList<>();
         lts.add(new Trooper("1000", "192.168.0.2"));
         lts.add(new Trooper("1001", "192.168.0.8"));
         lts.add(new Trooper("1003", "192.168.0.3"));
         lts.add(new Trooper("1005", "192.168.0.5"));
         acm.addAll(lts);
+        */
         // connect to each column...
         column_id.setCellValueFactory(new PropertyValueFactory<>("id"));
         column_ip.setCellValueFactory(new PropertyValueFactory<>("ip"));
@@ -78,6 +80,7 @@ public class AuthClientController extends BaseController{
             });
             return row;
         });
+        refresh(null);
     }
 
     public void refresh(ActionEvent actionEvent){
