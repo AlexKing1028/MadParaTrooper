@@ -51,14 +51,26 @@ public class AuthHotspotModel extends AuthModel{
      * broadcast to all users to start authentication
      */
     public void startAuth(){
-
+        byte[] content = new byte[1];
+        content[0] = '.';
+        try{
+            MainModel.getIspServer().sendBroadcast(content, Constant.Broadcast_START_AUTHENTICATION);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     /**
      * broadcast to stop all auth
      */
     public void stopAuth(){
-
+        byte[] content = new byte[1];
+        content[0] = '.';
+        try{
+            MainModel.getIspServer().sendBroadcast(content, Constant.Broadcast_STOP_AUTHENTICATION);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     /**

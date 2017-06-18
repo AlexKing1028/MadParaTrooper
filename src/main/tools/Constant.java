@@ -8,4 +8,6 @@ public class Constant {
     public final static byte OPEN_REQUEST = 1;
 
     public final static byte Broadcast_START_COMMANDER = 63;
+    public final static byte Broadcast_START_AUTHENTICATION= 64;
+    public final static byte Broadcast_STOP_AUTHENTICATION= 65;
 }
