@@ -2,6 +2,8 @@ package millionaire;
 
 import rsa.RSA;
 
+import java.math.BigInteger;
+
 /**
  * Created by rui on 2017/6/17.
  */
@@ -36,9 +38,12 @@ public class Millionnaire {
 	 */
 	public static int[] step2(int mA, int rank, String privateKey, int _Bbound) {
 		// BigInteger a=bound.nextProbablePrime();//这地方还有问题，应该是比bound稍小一点的大随机素数
-		while (!(Prime.isPrime(_Bbound))) {
-			_Bbound--;
+		_Bbound = 133;
+		BigInteger bi = new BigInteger(_Bbound + "");
+		while (!bi.isProbablePrime(20)) {
+			bi = bi.subtract(BigInteger.ONE);
 		}
+		_Bbound = bi.intValue();
 		int p = _Bbound;// B生成的大随机素数
 		int[] y = new int[100];// 使用秘钥解密后的100个数
 		int[] z = new int[100];
@@ -78,6 +83,7 @@ public class Millionnaire {
 				}
 			}
 			pnum = true;
+			break;
 		}
 		// 生成结果序列
 		for (int u = 1; u < 101; u++) {
