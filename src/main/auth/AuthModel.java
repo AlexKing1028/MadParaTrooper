@@ -5,6 +5,7 @@ import javafx.util.Callback;
 import main.MainModel;
 import main.model.Trooper;
 
+import java.net.DatagramPacket;
 import java.net.Inet4Address;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,12 +19,12 @@ public class AuthModel {
 
     protected ObservableList<Trooper> troopers;
 
-    protected List<Callback<byte[], String>> callbacks = new ArrayList<>();
+    protected List<Callback<DatagramPacket, String>> callbacks = new ArrayList<>();
     protected AuthModel(ObservableList<Trooper> ts){
         troopers = ts;
-        callbacks.add(new Callback<byte[], String>() {
+        callbacks.add(new Callback<DatagramPacket, String>() {
             @Override
-            public String call(byte[] param) {
+            public String call(DatagramPacket param) {
                 /**
                  * solve
                  * 1. start authentication response

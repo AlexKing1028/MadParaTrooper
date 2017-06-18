@@ -6,6 +6,7 @@ import main.MainModel;
 import main.auth.AuthModel;
 import main.model.Trooper;
 
+import java.net.DatagramPacket;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,14 +15,13 @@ import java.util.List;
  */
 public class AuthHotspotModel extends AuthModel{
 
-    Callback<byte[], String> responce = new Callback<byte[], String>() {
+    Callback<DatagramPacket, String> responce = new Callback<DatagramPacket, String>() {
         @Override
-        public String call(byte[] param) {
+        public String call(DatagramPacket param) {
             /**
              * solve stopping authentication response..
              * select the trusted troopers
              */
-            filterTroopers(param);
             return "ok";
         }
     };

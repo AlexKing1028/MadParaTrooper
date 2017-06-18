@@ -5,6 +5,7 @@ import javafx.util.Callback;
 import main.auth.AuthModel;
 import main.model.Trooper;
 
+import java.net.DatagramPacket;
 import java.util.List;
 
 /**
@@ -12,9 +13,9 @@ import java.util.List;
  */
 public class AuthClientModel extends AuthModel{
 
-    Callback<byte[], String> response = new Callback<byte[], String>() {
+    Callback<DatagramPacket, String> response = new Callback<DatagramPacket, String>() {
         @Override
-        public String call(byte[] param) {
+        public String call(DatagramPacket param) {
             /**
              * solve stop authentication response: send result to hotspot
              *

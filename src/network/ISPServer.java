@@ -22,7 +22,7 @@ public class ISPServer extends Thread {
     private int networkPrefixLength;
     boolean runningFlag = true;
 
-    List<Callback<byte[], String>> callbacks;
+    List<Callback<DatagramPacket, String>> callbacks;
     
     final static public byte sourceVerify = 0;
     final static public byte sourceElect = 1;
@@ -38,11 +38,11 @@ public class ISPServer extends Thread {
         }
     }
 
-    public void setCallbacks(List<Callback<byte[], String>> callBacks){
+    public void setCallbacks(List<Callback<DatagramPacket, String>> callBacks){
         this.callbacks = callBacks;
     }
 
-    public void addCallback(Callback<byte[],String> callback){
+    public void addCallback(Callback<DatagramPacket, String> callback){
         if (callbacks == null){
             callbacks = new ArrayList<>();
         }
@@ -53,7 +53,7 @@ public class ISPServer extends Thread {
         callbacks = new ArrayList<>();
     }
 
-    private List<Callback<byte[], String>> callbacks(){
+    private List<Callback<DatagramPacket, String>> callbacks(){
         if (callbacks == null) callbacks = new ArrayList<>();
         return callbacks;
     }
@@ -73,8 +73,8 @@ public class ISPServer extends Thread {
                     /**
                      * run callbacks
                      */
-                    for (Callback<byte[], String> cb: callbacks()){
-                        String result = cb.call(receiveData);
+                    for (Callback<DatagramPacket, String> cb: callbacks()){
+                        String result = cb.call(receivePacket);
                     }
                     /*
                 	switch (receiveData[0]) {
