@@ -2,12 +2,14 @@ package main.auth;
 
 import javafx.collections.ObservableList;
 import javafx.util.Callback;
+import main.Main;
 import main.MainModel;
 import main.model.Trooper;
 
 import java.net.DatagramPacket;
 import java.net.Inet4Address;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -40,6 +42,7 @@ public class AuthModel {
 
     public void refreshList(Inet4Address[] addresses){
         int len = troopers.size();
+        HashMap<Inet4Address, Integer> id_map = MainModel.getPeerDetector().GetPeerIDMap();
         for (Inet4Address address: addresses){
             boolean exist = false;
             // check if existed
@@ -51,7 +54,7 @@ public class AuthModel {
             }
             if (!exist){
                 // add new address
-                Trooper trooper=new Trooper("", address.getHostAddress());
+                Trooper trooper=new Trooper(id_map.getOrDefault(address, -1)+"", address.getHostAddress());
                 troopers.add(trooper);
             }
         }
