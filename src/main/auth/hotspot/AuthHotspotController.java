@@ -106,6 +106,7 @@ public class AuthHotspotController extends BaseController{
     public void chooseCommander(ActionEvent actionEvent){
         println(console, "choosing commander");
         // send request
+        /*
         Thread t = new Thread(()->{
             int r = new Random().nextInt(3000);
             try {
@@ -121,6 +122,8 @@ public class AuthHotspotController extends BaseController{
             });
         });
         t.start();
+        */
+        ahm.startChooseCommander();
     }
 
     public void refresh(ActionEvent actionEvent){

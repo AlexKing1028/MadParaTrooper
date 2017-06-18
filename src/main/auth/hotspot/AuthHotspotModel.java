@@ -1,10 +1,12 @@
 package main.auth.hotspot;
 
+import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
 import javafx.collections.ObservableList;
 import javafx.util.Callback;
 import main.MainModel;
 import main.auth.AuthModel;
 import main.model.Trooper;
+import main.tools.Constant;
 
 import java.net.DatagramPacket;
 import java.util.ArrayList;
@@ -84,5 +86,15 @@ public class AuthHotspotModel extends AuthModel{
             }
         }
         return li;
+    }
+
+    public void startChooseCommander(){
+        byte[] content = new byte[1];
+        content[0] = '.';
+        try{
+            MainModel.getIspServer().sendBroadcast(content, Constant.Broadcast_START_COMMANDER);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
     }
 }

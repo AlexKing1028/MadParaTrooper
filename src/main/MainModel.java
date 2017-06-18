@@ -60,7 +60,8 @@ public class MainModel {
      */
     static void initIspServer(){
         try{
-            ispServer = new ISPServer(getPeerDetector().GetLocalAddress());
+            //ispServer = new ISPServer(getPeerDetector().GetLocalAddress());
+            ispServer = new ISPServer(null);
         }catch (SocketException se){
             se.printStackTrace();
         }
