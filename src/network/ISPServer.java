@@ -16,7 +16,7 @@ import javafx.util.Callback;
 public class ISPServer extends Thread {
     private boolean debug = false;
 
-    private Inet4Address localAddress;
+    public Inet4Address localAddress;
     private DatagramSocket serverSocket;
     private DatagramSocket clientSocket;
     private int networkPrefixLength;
