@@ -8,6 +8,7 @@ import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import main.auth.AuthModel;
 import main.model.Equipment;
 import main.tools.BaseController;
 
@@ -41,7 +42,9 @@ public class EquipmentController extends BaseController{
         em.addItem(new Equipment("12", null, null,"ababfabfefwfw221"));
         em.addItem(new Equipment("13", null, null,"ababfabfefaef12"));
         */
-
+        if (AuthModel.isCommander()){
+            println(console, "you are the commander!!");
+        }
         requests.setItems(oe);
         requests.setCellFactory(list->{
             ListCell<Equipment> le = new ListCell<Equipment>(){
