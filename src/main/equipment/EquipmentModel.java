@@ -148,8 +148,8 @@ public class EquipmentModel {
         }
         // broadcast to all troopers
         // ....
-        byte[] content = new byte[1];
-        content[0] = Byte.parseByte(equipment.getId());
+        byte[] content = new byte[4];
+        content = DataTransfer.intToBytes(Integer.parseInt(equipment.getId()), content, 0);
         try{
             MainModel.getIspServer().sendBroadcast(content, Constant.Broadcast_OPEN_EQUIPMENT);
         } catch (Exception e){
