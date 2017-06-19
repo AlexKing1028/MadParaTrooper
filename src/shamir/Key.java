@@ -5,6 +5,7 @@ import main.tools.DataTransfer;
 import java.io.Serializable;
 
 public class Key implements Serializable{
+	private static final long serialVersionUID = -789968168495677724l;
 	public double x;
 	public double y;
 	
@@ -68,7 +69,6 @@ public class Key implements Serializable{
 		return result;
 	}
 
-	/*
 	public static void main(String[] args){
         Key k = new Key(123.0, 14.56);
         byte[] b = new byte[Key.getByteLen()];
@@ -76,5 +76,4 @@ public class Key implements Serializable{
         Key k1 = Key.fromBytes(b, 0);
         System.out.println(k1.x+" "+k1.y);
     }
-    */
 }

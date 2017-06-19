@@ -28,6 +28,7 @@ public class Main extends Application {
                 {
                     return;
                 }
+                System.out.println("close!");
                 MainModel.getPeerDetector().Stop();
             }
         });
