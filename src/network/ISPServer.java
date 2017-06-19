@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import main.MainModel;
-
 import javafx.util.Callback;
 
 /**
@@ -124,7 +123,10 @@ public class ISPServer extends Thread {
     	System.arraycopy(content, 0, buf, 1, content.length);
     	//DatagramPacket sendPacket = new DatagramPacket(buf, buf.length, dst, 9874);
     	System.out.println("SEND: "+dst+" "+ new String(buf));
-    	Socket clientSocket = new Socket(dst, 9874, this.localAddress, 9873);
+    	Socket clientSocket = new Socket();
+    	clientSocket.setReuseAddress(true);
+    	clientSocket.bind(new InetSocketAddress(localAddress, 9873));
+    	clientSocket.connect(new InetSocketAddress(dst, 9874));
     	OutputStream outputStream = clientSocket.getOutputStream();
     	outputStream.write(buf);
     	clientSocket.shutdownOutput();

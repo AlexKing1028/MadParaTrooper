@@ -61,6 +61,8 @@ public class MainModel {
             //ispServer = new ISPServer(null);
         }catch (SocketException se){
             se.printStackTrace();
+        }catch (IOException io) {
+        	io.printStackTrace();
         }
     }
 
