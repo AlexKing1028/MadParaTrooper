@@ -67,7 +67,7 @@ public class Equipment implements Serializable{
 
     @Override
     public String toString(){
-        return id + " " + description;
+        return id + " " + description + " "+ state;
     }
 
     @Override

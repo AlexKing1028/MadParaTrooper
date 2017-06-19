@@ -75,16 +75,7 @@ public class EquipmentModel {
                     if (AuthModel.isCommander() && collected_keys!=null){
                         Key k = Key.fromBytes(data, 5);
                         HashSet<Key> sk = addKey(e, k);
-                        int result =  e.tryUnlock(sk);
-                        if (result == 1){
-                            // pass
-                            broadcastOpening(e);
-                        } else if (result == -2){
-                            // wrong keys
-                            sk.clear();
-                        } else{
-                            // people is not enough
-                        };
+                        unlock(e, sk);
                         return "ok";
                     }
                     return "unauthorized";
@@ -104,6 +95,19 @@ public class EquipmentModel {
         // read from file...
     }
 
+    private void unlock(Equipment e, HashSet<Key> sk){
+        int result =  e.tryUnlock(sk);
+        if (result == 1){
+            // pass
+            broadcastOpening(e);
+        } else if (result == -2){
+            // wrong keys
+            sk.clear();
+        } else{
+            // people is not enough
+        };
+    }
+
     public void addItem(Equipment e){
         equipments.add(e);
     }
@@ -120,6 +124,7 @@ public class EquipmentModel {
         if (AuthModel.isCommander()){
             // add directly
             addKey(equipment, equipment.getKey());
+            unlock(equipment, collected_keys.get(equipment));
         } else{
             // sending request to commander
             try{

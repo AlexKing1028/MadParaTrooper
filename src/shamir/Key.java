@@ -70,7 +70,7 @@ public class Key implements Serializable{
 	}
 
 	public static void main(String[] args){
-        Key k = new Key(123.0, 14.56);
+        Key k = new Key(1.0, 140031.56);
         byte[] b = new byte[Key.getByteLen()];
         b = k.toBytes(b, 0);
         Key k1 = Key.fromBytes(b, 0);
