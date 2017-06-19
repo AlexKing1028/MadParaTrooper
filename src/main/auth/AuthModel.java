@@ -90,7 +90,6 @@ public class AuthModel {
 						list[i]=z;
 					}
 					int compareResult=LevelCompare.callStep3(list);
-					compareResult = 1;
 					byte[] src1=new byte[4];
 					src1=DataTransfer.intToBytes(compareResult, src1, 0);
 					try {
