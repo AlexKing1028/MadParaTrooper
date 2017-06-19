@@ -13,4 +13,7 @@ public class Constant {
     public final static byte LEVEL_MESSAGE_LIST=3;
     public final static byte LEVEL_COMPARE_RESULT=4;
     public final static byte Broadcast_IM_LEADER=66;
+
+    public final static byte AUTH_1_TO = 21;
+    public final static byte AUTH_2_TO = 22;
 }

@@ -1,7 +1,9 @@
 package rsa;
 
-import java.io.ByteArrayOutputStream;  
-import java.security.Key;  
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.FileReader;
+import java.security.Key;
 import java.security.KeyFactory;  
 import java.security.KeyPair;  
 import java.security.KeyPairGenerator;  
@@ -109,6 +111,22 @@ public class RSAUtils {
         byte[] decryptedData = out.toByteArray();  
         out.close();  
         return decryptedData;  
-    }  
+    }
+
+    public static String readKey(String file){
+	    StringBuffer sb = new StringBuffer();
+	    try {
+            String line = null;
+            BufferedReader brpub = new BufferedReader(new FileReader(file));
+            while ((line = brpub.readLine()) != null) {
+                sb.append(line + '\n');
+            }
+            System.out.println(sb.toString());
+            brpub.close();
+        }catch (Exception e){
+	        e.printStackTrace();
+        }
+        return sb.toString();
+    }
 
 }

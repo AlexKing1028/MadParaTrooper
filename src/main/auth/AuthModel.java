@@ -15,6 +15,7 @@ import main.tools.DataTransfer;
 import main.tools.SceneManager;
 import millionaire.LevelCompare;
 import network.ISPServer;
+import rsa.RSAUtils;
 
 import java.io.IOException;
 import java.math.BigInteger;
@@ -130,6 +131,60 @@ public class AuthModel {
 				case Constant.Broadcast_START_AUTHENTICATION:
 				    startAuthentication();
 					return "start auth";
+                case Constant.AUTH_1_TO:
+                    // get target public key
+                    int len = DataTransfer.bytesToInt(data, 1);
+                    byte[] content = new byte[len];
+                    for (int i=0; i<len; i++){
+                        content[i] = data[i+5];
+                    }
+                    try {
+                        byte[] b = RSAUtils.decryptByPrivateKey(content, MainModel.user.getRsa());
+                        int uid = MainModel.getPeerDetector().GetPeerIDMap().get(param.getAddress());
+                        String upub = MainModel.user.getRsa_pubs().get(uid);
+                        byte[] sendback =  wrapBytes(RSAUtils.encryptByPublicKey(b, upub));
+                        MainModel.getIspServer().send(((Inet4Address) param.getAddress()), sendback, Constant.AUTH_2_TO);
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                case Constant.AUTH_2_TO:
+                    int len2 = DataTransfer.bytesToInt(data, 1);
+                    byte[] content2 = new byte[len2];
+                    for (int i=0; i<len2; i++){
+                        content2[i] = data[i+5];
+                    }
+                    try{
+                        byte[] b = RSAUtils.decryptByPrivateKey(content2, MainModel.user.getRsa());
+                        boolean pass = true;
+                        for (int i=0; i<secret.length; i++){
+                            if (secret[i] != b[i]){
+                                pass = false;
+                            }
+                        }
+                        if (pass){
+                            // find the trooper
+                            current = null;
+                            String srcaddress = param.getAddress().getHostAddress();
+                            for (current_i =0; current_i<troopers.size(); current_i++){
+                                Trooper tmp = troopers.get(current_i);
+                                if (tmp.getIp().equals(srcaddress)){
+                                    current = tmp;
+                                    break;
+                                };
+                            }
+                            if (current == null){
+                                return "invalid trooper";
+                            }
+                            System.out.println("accept "+ current.getId() + " !");
+                            Platform.runLater(()->{
+                                // accept
+                                current.setState(Trooper.State.AC.getValue());
+                                troopers.set(current_i, current);
+                            });
+                        }
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
 				}
 				return "ok";
 			}
@@ -137,6 +192,19 @@ public class AuthModel {
 		// binding the callback to ispServer
 		MainModel.getIspServer().setCallbacks(callbacks);
 	}
+
+	private Trooper current = null;
+	private int current_i = 0;
+
+	private byte[] wrapBytes(byte[] content){
+        int len = content.length;
+        byte[] c = new byte[Integer.BYTES + content.length];
+        DataTransfer.intToBytes(len, c, 0);
+        for (int j=0; j<content.length; j++){
+            c[j+4] = content[j];
+        }
+	    return c;
+    }
 
     public void refreshList(Inet4Address[] addresses){
         int len = troopers.size();
@@ -173,8 +241,20 @@ public class AuthModel {
 		}
 	}
 
+	byte[] secret = new byte[2];
 	private void startAuthentication(){
-
+        Inet4Address[] addresses = MainModel.getPeerDetector().GetPeerAddresses();
+        for (int i=0; i<addresses.length; i++){
+            new Random().nextBytes(secret);
+            int uid = MainModel.getPeerDetector().GetPeerIDMap().get(addresses[i]);
+            String upub = MainModel.user.getRsa_pubs().get(uid);
+            try{
+                byte[] content = RSAUtils.encryptByPublicKey(secret, upub);
+                MainModel.getIspServer().send(addresses[i], wrapBytes(content), Constant.AUTH_1_TO);
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+        }
     }
 
 	private static int maxbound = 999999999;

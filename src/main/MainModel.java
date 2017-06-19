@@ -5,6 +5,7 @@ import main.model.User;
 import network.ISPServer;
 import network.PeerDetector;
 import network.WLANDetectorWrapper;
+import rsa.RSAUtils;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -12,6 +13,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.SocketException;
 import java.time.Period;
+import java.util.HashMap;
 
 /**
  * Created by wesley on 2017/6/14.
@@ -30,6 +32,13 @@ public class MainModel {
             String name = br.readLine();
             String description = br.readLine();
             user = new User(id, level, name, description);
+            br.close();
+            user.setRsa_pub(RSAUtils.readKey("rsa.pub"));
+            user.setRsa(RSAUtils.readKey("rsa"));
+            HashMap<Integer, String> his = new HashMap<>();
+            String pub_1 = RSAUtils.readKey("rsa1.pub");
+            his.put(1, pub_1);
+            user.setRsa_pubs(his);
             return user;
         } catch (Exception e){
             e.printStackTrace();

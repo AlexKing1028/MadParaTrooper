@@ -29,7 +29,7 @@ public class Trooper {
         setId(id);
         setIp(ip);
         // setState(State.NO.getValue());
-        setState(State.AC.getValue());
+        setState(State.NO.getValue());
     }
 
     public StringProperty ip(){
