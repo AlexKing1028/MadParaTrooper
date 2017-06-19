@@ -1,5 +1,6 @@
 package main.equipment;
 
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.util.Callback;
 import main.MainModel;
@@ -36,6 +37,9 @@ public class EquipmentModel {
 
     List<Callback<DatagramPacket, String>> callbacks = new ArrayList<>();
 
+    private Equipment tmp;
+    private int tmpi;
+
     Callback<DatagramPacket, String> response = new Callback<DatagramPacket, String>() {
         @Override
         public String call(DatagramPacket param) {
@@ -68,8 +72,12 @@ public class EquipmentModel {
                     if (!AuthModel.getCommanderIP().equals(param.getAddress().getHostAddress())){
                         return "invalid request";
                     }
-                    e.setState(Equipment.State.Open.getValue());
-                    equipments.set(i, e);
+                    tmp = e;
+                    tmpi = i;
+                    Platform.runLater(()->{
+                        tmp.setState(Equipment.State.Open.getValue());
+                        equipments.set(tmpi, tmp);
+                    });
                     return "invalid id";
                 case Constant.OPEN_REQUEST:
                     if (AuthModel.isCommander() && collected_keys!=null){
