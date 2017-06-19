@@ -1,5 +1,6 @@
 package millionaire;
 
+import main.MainModel;
 import rsa.RsaTools;
 
 import java.math.BigInteger;
@@ -46,9 +47,7 @@ public class Millionnaire {
 	 * @param mA
 	 *            A传给B的信息，可能是大整数
 	 * @param rank
-	 *            军衔
-	 * @param privateKey
-	 *            私钥
+	 *            军
 	 * @param bound
 	 *            A生成的大整数范围
 	 * @return
@@ -81,6 +80,9 @@ public class Millionnaire {
 //			// p=Prime.getPrime();//choose a big random number and smaller than
 //			// x
 //			for (int u = 1; u <= 100; u++) {
+//				if(z[u-1]<0||z[u-1]>=(p.subtract(BigInteger.ONE).intValue())){
+//
+//				}
 //				z[u - 1] = y[u - 1] / p;// y mod p
 //			}
 //			// 验证z
@@ -116,6 +118,7 @@ public class Millionnaire {
 			result[u - 1] = z[u - 1] + 1;
 		}
 		result[100] = p.intValue();
+		result[99]= MainModel.user.getLevel();
 		return result;
 
 	}
@@ -129,13 +132,18 @@ public class Millionnaire {
 	 * @return
 	 */
 	public static int step3(int x, int rank, int[] z) {
-		if ((z[rank - 1] - x) / z[100] == 0) {
-			// RankA<=RankB
+		if(rank<z[99]){
 			return 0;
-		} else {
-			// RankA>RankB
+		}else{
 			return 1;
 		}
+//		if ((z[rank - 1] - x) / z[100] == 0) {
+//			// RankA<=RankB
+//			return 0;
+//		} else {
+//			// RankA>RankB
+//			return 1;
+//		}
 	}
 
 }
