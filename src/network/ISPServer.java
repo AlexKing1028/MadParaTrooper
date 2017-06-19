@@ -1,13 +1,14 @@
 package network;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.*;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
-import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
+import main.MainModel;
+
 import javafx.util.Callback;
 
 /**
@@ -17,8 +18,8 @@ public class ISPServer extends Thread {
     private boolean debug = false;
 
     public Inet4Address localAddress;
-    private DatagramSocket serverSocket;
-    private DatagramSocket clientSocket;
+    private ServerSocket serverSocket;
+    //private HashMap<Inet4Address, Socket> clientSockets;
     private int networkPrefixLength;
     boolean runningFlag = true;
 
@@ -29,12 +30,12 @@ public class ISPServer extends Thread {
     final static public byte sourceUnlock = 2;
 
 
-    public ISPServer(Inet4Address localAddress) throws SocketException {
+    public ISPServer(Inet4Address localAddress) throws IOException {
         this.localAddress = localAddress;
         networkPrefixLength = 24;
         if (!debug) {
-            serverSocket = new DatagramSocket(9874, localAddress);
-            clientSocket = new DatagramSocket(9873, localAddress);
+            serverSocket = new ServerSocket(9874, 100, localAddress);
+            //clientSockets = new HashMap<Inet4Address, Socket>();
         }
     }
 
@@ -61,20 +62,27 @@ public class ISPServer extends Thread {
     public void run() {
         try {
             byte[] receiveData = new byte[1024];
-            byte[] sendData = new byte[1024];
             while (runningFlag) {
-                DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
-                serverSocket.receive(receivePacket);
-                InetAddress IPAddress = receivePacket.getAddress();
-                System.out.println("RECEIVED: " + IPAddress);
-                int port = receivePacket.getPort();
+            	Socket socket = serverSocket.accept();
+            	InputStream inputStream = socket.getInputStream();
+            	int receiveLen = inputStream.read(receiveData);
+            	socket.close();
+            	InetAddress IPAddress = socket.getInetAddress();
+            	int port = socket.getPort();
+//                DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
+//                serverSocket.receive(receivePacket);
+//                InetAddress IPAddress = receivePacket.getAddress();
+//                System.out.println("RECEIVED: " + IPAddress);
+//                int port = receivePacket.getPort();
                 if ((port == 9873 || port == 9874) && IPAddress instanceof Inet4Address && sameNetwork((Inet4Address)IPAddress)) {
                 	// Message Handlers
                     /**
                      * run callbacks
                      */
                     for (Callback<DatagramPacket, String> cb: callbacks()){
-                        String result = cb.call(receivePacket);
+                        DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveLen);
+                        receivePacket.setAddress(IPAddress);
+                    	String result = cb.call(receivePacket);
                     }
                     /*
                 	switch (receiveData[0]) {
@@ -91,7 +99,7 @@ public class ISPServer extends Thread {
 						System.err.println("Unknown SourceType package received!");
 						break;
 					}
-					*/
+//					*/
                 }
             }
         }
@@ -103,7 +111,7 @@ public class ISPServer extends Thread {
         }
     }
 
-    public void kill() {
+    public void kill() throws IOException {
     	serverSocket.close();
         runningFlag = false;
     }
@@ -114,13 +122,19 @@ public class ISPServer extends Thread {
     	buf = new byte[content.length + 1];
     	buf[0] = sourceType;
     	System.arraycopy(content, 0, buf, 1, content.length);
-    	DatagramPacket sendPacket = new DatagramPacket(buf, buf.length, dst, 9874);
+    	//DatagramPacket sendPacket = new DatagramPacket(buf, buf.length, dst, 9874);
     	System.out.println("SEND: "+dst+" "+ new String(buf));
-    	clientSocket.send(sendPacket);
+    	Socket clientSocket = new Socket(dst, 9874, this.localAddress, 9873);
+    	OutputStream outputStream = clientSocket.getOutputStream();
+    	outputStream.write(buf);
+    	clientSocket.shutdownOutput();
+    	clientSocket.close();
     }
     
     public void sendBroadcast(byte[] content, byte sourceType) throws IOException {
-    	this.send((Inet4Address)InetAddress.getByName("255.255.255.255"), content, sourceType);
+    	for (Inet4Address n : MainModel.getPeerDetector().GetPeerAddresses()) {
+        	this.send(n, content, sourceType);    		
+    	}
     }
 
     private boolean sameNetwork(Inet4Address IPAddress) {
