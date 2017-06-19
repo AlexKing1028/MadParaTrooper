@@ -147,6 +147,7 @@ public class AuthModel {
                     }catch (Exception e){
                         e.printStackTrace();
                     }
+                    break;
                 case Constant.AUTH_2_TO:
                     int len2 = DataTransfer.bytesToInt(data, 1);
                     byte[] content2 = new byte[len2];
@@ -185,6 +186,7 @@ public class AuthModel {
                     }catch (Exception e){
                         e.printStackTrace();
                     }
+                    break;
 				}
 				return "ok";
 			}
