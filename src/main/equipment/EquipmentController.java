@@ -53,6 +53,9 @@ public class EquipmentController extends BaseController{
                         setGraphic(null);
                         return;
                     }
+                    if (item.getState()==null){
+                        item.setState(Equipment.State.Close.getValue());
+                    }
                     setText(item.toString());
                 }
             };

@@ -44,7 +44,7 @@ public class Equipment implements Serializable{
         this.description = description;
         this.box = box;
         this.key = key;
-
+        this.state = State.Close.getValue();
     }
 
     public int tryUnlock(Collection<Key> keys){
